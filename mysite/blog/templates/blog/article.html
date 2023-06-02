@@ -1,0 +1,44 @@
+{% extends 'blog/layout.html' %} {% block body %}
+<div class="content">
+	<input class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
+	
+	<div class="title text-center">
+		<h1>Articles</h1>
+		<a class="btn btn-primary mt-2 mb-3" href="{% url 'new_article' %}" role="button">Ajouter</a>
+	</div>
+
+	<div class="display component text-center">
+		<!-- Article -->
+		<table class="table article">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Nom</th>
+					<th scope="col">Prix</th>
+					<th scope="col">Code bare</th>
+					<th scope="col">Stock</th>
+					<th scope="col">Fournisseur</th>					
+					<th scope="col">Modification / Suppresion</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for article in listarticle %}
+				<tr class="{{article.id}}">
+					<th scope="row">{{forloop.counter}}</th>
+					<td>{{article.name}}</td>
+					<td>{{article.price}}</td>
+					<td>{{article.barcode}}</td>
+					<td>{{article.stock}}</td>
+					<td>{{article.provider}}</td>
+					<td><a href="{% url 'edit_article' article.id %}"
+						class="btn btn-warning">Modifier</a> <a
+						href="{% url 'delete_article' article.id %}"
+						class="btn btn-danger">Supprimer</a></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
