@@ -29,6 +29,8 @@ class Article(models.Model):
     barcode = models.IntegerField()
     stock = models.IntegerField(default=0)
     provider = models.ForeignKey('Provider', on_delete=models.CASCADE, default=DEFAULT_ID)
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
+
 
     def __str__(self):
         return self.name

@@ -15,6 +15,17 @@
 					<label for="barcode">Quantite</label>
 					<input required="required" type="number" class="form-control" name="qty">
 				</div>
+				<div class="form-group">
+                    <label for="client">Vendre à</label>
+                    <select class="form-control" name="client">
+                        <option value="">Sélectionner un client</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}">{{ client.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+				
+				
 				<div class="form-group mt-4 pt-2 ml-3">
 					<button type="submit" class="btn btn-info">Ajouter</button>
 				</div>
@@ -32,17 +43,29 @@
 					<th scope="col">Code barre</th>
 					<th scope="col">Prix unitaire</th>
 					<th scope="col">Nombre d'article</th>
+					<th scope="col">Fournisseur</th>
+					<th scope="col">Vendre à</th>
 					<th scope="col">Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for key, value in listarticles.items %}
-					<tr class="{{ value.0.id }}">
-						<th scope="row">{{ forloop.counter }}</th>
-						<td>{{ value.0.name }}</td>
-						<td>{{ value.0.barcode }}</td>
-						<td>{{ value.0.price }}</td>
-						<td>{{ value.1 }}</td>
+				<tr class="{{ value.0.id }}">
+					<th scope="row">{{ forloop.counter }}</th>
+					<td>{{ value.0.name }}</td>
+					<td>{{ value.0.barcode }}</td>
+					<td>{{ value.0.price }}</td>
+					<td>{{ value.1 }}</td>
+					<td>{{ value.0.provider.name }}</td> <!-- Add provider name column -->
+					<td>
+						{% if value.0.client %}
+							{{ value.0.client.name }}
+						{% else %}
+							N/A
+						{% endif %}
+					</td>
+					<td>
+
 						<td class="d-flex align-items-center justify-content-around ">
 							<form action="{% url 'delete_article' value.0.id %}" method="POST" class="d-inline">
 								{% csrf_token %}

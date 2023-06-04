@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from blog.models import Article
+from blog.models import Article,Client
 from django.http.response import HttpResponseRedirect
 
 
@@ -10,6 +10,7 @@ def caisse(request):
     if request.method == 'POST':
         barcode = request.POST.get('barcode')
         qty = int(request.POST.get('qty'))
+        client_id = request.POST.get('client')  # Get the selected client ID
 
         try:
             article = Article.objects.get(barcode=barcode)
@@ -21,8 +22,12 @@ def caisse(request):
             else:
                 list_key[str(article.barcode)] = qty
 
-
             request.session['listkey'] = list_key
+
+            if client_id:  # Check if a client is selected
+                article.client_id = client_id
+                article.save()
+
         except Article.DoesNotExist:
             # Handle the case when the article doesn't exist
             pass
@@ -34,13 +39,15 @@ def caisse(request):
 
     try:
         for key, value in list_key.items():
-            article = Article.objects.get(barcode=int(key))
+            article = Article.objects.select_related('provider', 'client').get(barcode=int(key))
             list_article[article.barcode] = [article, value]
     except Article.DoesNotExist:
         # Handle the case when the article doesn't exist
         pass
 
-    return render(request, 'caisse/caisse.html', {'listarticles': list_article, 'listkeys': list_key})
+    clients = Client.objects.all()  # Retrieve all clients
+    return render(request, 'caisse/caisse.html', {'listarticles': list_article, 'listkeys': list_key, 'clients': clients})
+
 
 def paiement(request):
     list_key = request.session['listkey']
