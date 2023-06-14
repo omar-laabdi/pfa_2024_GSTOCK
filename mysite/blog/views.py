@@ -1,13 +1,17 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
-
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from blog.models import Provider, Article ,Client
 from django.template.context_processors import request
 
 
 def home(request):
-    return redirect('provider')
+    return redirect('login')
 
+def login(request):
+    return render(request, 'blog/login.html')
     
 def provider(request):
     list_provider = Provider.objects.all().order_by('-name')
@@ -148,3 +152,8 @@ def delete_client(request, client_id):
 def delete_article(request, article_id):
     Article.objects.get(id=article_id).delete()
     return HttpResponseRedirect("/article")
+
+
+
+
+
