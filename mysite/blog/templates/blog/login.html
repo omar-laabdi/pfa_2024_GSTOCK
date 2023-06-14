@@ -1,40 +1,102 @@
-{% block content %}
-  <h2>Login</h2>
-  {% if error_message %}
-    <p>{{ error_message }}</p>
-  {% endif %}
-  <form method="post" >
-    {% csrf_token %}
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit" id="loginBtn">Login</button>
-  </form>
-{% endblock %}
-
-<script>
-  document.getElementById("loginBtn").addEventListener("click", function(event) {
-    event.preventDefault(); // Prevent form submission
-
-    // Get the entered username and password
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-
-    // Perform the verification
-    var correctUsername = "aze"; // Replace with the correct username
-    var correctPassword = "aze"; // Replace with the correct password
-
-    if (username === correctUsername && password === correctPassword) {
-      // Username and password match
-      alert("Login successful!");
-      // Redirect to another page
-      window.location.href = "provider"; // Replace with your desired URL
-    } else {
-      // Username and password do not match
-      alert("Invalid username or password. Please try again.");
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head%}{% endblock %}
+  <meta charset="utf-8">
+  <title>Outil de gestion de stock</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .btn-anim:hover{
+      color: #0f903e !important;
+      background-color: #F8F9FA !important;
+      box-shadow: 0.3rem 0.3rem black, -0.3rem -0.3rem #0f903e;
+      transition: all .3s;
     }
-  });
-</script>
+  </style>
+</head>
+<body class="bg-light">
+  
+
+  {% block content %}
+  <div class="container">
+
+    <nav class="navbar bg-white rounded">
+      <div class="container-fluid">
+        <a class="navbar-brand text-dark fw-bold text-center" href="">
+          <img src="{% static 'img/emsi.png' %}" alt="Bootstrap" class="img-fluid w-25">
+        </a>
+      </div>
+    </nav>
+
+    <div class="card mt-5 w-50 text-center mx-auto" >
+      <img src="{% static 'img/login.svg' %}" class="card-img-top w-50 mx-auto" alt="...">
+      <div class="card-body">
+        <h2 class="text-success fw-bold mb-3 badge px-5 fs-3 bg-success text-light">Login Manager</h2>
+          <form method="post" >
+            <div class="mb-3">
+              <input type="text" class="form-control w-50 mx-auto fw-bold" id="username" placeholder="Username" name="username" required>
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control w-50 mx-auto fw-bold" id="password" placeholder="password" name="password" required>
+            </div>
+            <div class="mb-3">
+              <button type="submit" id="loginBtn" class="btn btn-success rounded fw-bold btn-anim">Login</button>
+            </div>
+            
+          </form>
+      </div>
+    </div>
+    <!-- <div class="align-middle">
+      <div class="text-center card align-middle">
+        <h2>Login</h2>
+        {% if error_message %}
+          <p>{{ error_message }}</p>
+        {% endif %}
+        <form method="post" >
+          {% csrf_token %}
+          
+          <label for="username" class="fs-2">Username:</label>
+          <input type="text" id="username" name="username" required>
+          <br>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+          <br>
+          <button type="submit" id="loginBtn" class="btn btn-primary rounded-pill fw-bold">Login</button>
+        </form>
+      </div>
+    </div> -->
+  </div>
+  
+    
+    
+  {% endblock %}
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get the entered username and password
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+
+      // Perform the verification
+      var correctUsername = "aze"; // Replace with the correct username
+      var correctPassword = "aze"; // Replace with the correct password
+
+      if (username === correctUsername && password === correctPassword) {
+        // Username and password match
+        alert("Login successful!");
+        // Redirect to another page
+        window.location.href = "provider"; // Replace with your desired URL
+      } else {
+        // Username and password do not match
+        alert("Invalid username or password. Please try again.");
+      }
+    });
+  </script>
+
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>

@@ -1,14 +1,14 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from blog.models import Provider, Article ,Client
-
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return redirect('login')
 
 def login(request):
     return render(request, 'blog/login.html')
-    
+
 def provider(request):
     list_provider = Provider.objects.all().order_by('-name')
     return render(request, 'blog/provider.html', {'listprovider': list_provider})
