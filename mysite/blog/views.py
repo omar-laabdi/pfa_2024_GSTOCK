@@ -1,8 +1,8 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from blog.models import Provider, Article ,Client
-
-
+from django.contrib.auth.decorators import login_required
+from blog.models import Provider, Article ,Client
 
 def home(request):
     return redirect('login')
