@@ -16,7 +16,7 @@ urlpatterns = [
     path('delete_article/<article_id>', views.delete_article, name='delete_article'),
     path('client/', views.client, name='client'),
     path('edit_client/<client_id>', views.edit_client, name='edit_client'),
-    path('new_client/', views.new_client, name='new_client'),
+    path('new_client', views.new_client, name='new_client'),
     path('delete_client/<client_id>', views.delete_client, name='delete_client'),
     
 ]
