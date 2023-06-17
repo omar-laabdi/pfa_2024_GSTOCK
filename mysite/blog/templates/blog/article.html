@@ -3,7 +3,7 @@
 	<input class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
 	
 	<div class="title text-center">
-		<h1>Articles</h1>
+		<h1>Stock</h1>
 		<a class="btn btn-primary mt-2 mb-3" href="{% url 'new_article' %}" role="button">Ajouter</a>
 	</div>
 
@@ -16,9 +16,11 @@
 					<th scope="col">Nom</th>
 					<th scope="col">Prix</th>
 					<th scope="col">Code bare</th>
-					<th scope="col">Stock</th>
+					<th scope="col">Quantité</th>
 					<th scope="col">Fournisseur</th>					
 					<th scope="col">Modification / Suppresion</th>
+					<th scope="col">Date d'ajout</th>
+					<th scope="col">Dernière modification</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,6 +36,8 @@
 						class="btn btn-warning">Modifier</a> <a
 						href="{% url 'delete_article' article.id %}"
 						class="btn btn-danger">Supprimer</a></td>
+					<td>{{article.date_added}}</td>
+                    <td>{{article.last_modified}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>

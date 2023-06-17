@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 DEFAULT_ID = 1
 
 
@@ -30,6 +30,12 @@ class Article(models.Model):
     stock = models.IntegerField(default=0)
     provider = models.ForeignKey('Provider', on_delete=models.CASCADE, default=DEFAULT_ID)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 
 
     def __str__(self):
