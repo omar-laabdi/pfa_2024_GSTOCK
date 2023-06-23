@@ -18,7 +18,10 @@ urlpatterns = [
     path('edit_client/<client_id>', views.edit_client, name='edit_client'),
     path('new_client', views.new_client, name='new_client'),
     path('delete_client/<client_id>', views.delete_client, name='delete_client'),
-    
+    path('caisse', views.caisse, name='caisse'),
+    path('paiement', views.paiement, name='paiement'),
+    path('delete/all/<str:barcode>/', views.delete_all_articles, name='delete_all_articles'),
+
 ]
 
 

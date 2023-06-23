@@ -1,4 +1,4 @@
-{% extends 'caisse/layout.html' %} 
+{% extends 'blog/layout.html' %} 
 
 {% block body %}
 <div class="content">
@@ -67,13 +67,10 @@
 					<td>
 
 						<td class="d-flex align-items-center justify-content-around ">
-							<form action="{% url 'delete_article' value.0.id %}" method="POST" class="d-inline">
-								{% csrf_token %}
-								<button type="submit" class="btn btn-danger">Supprimer un</button>
-							</form>
+							
 							<form action="{% url 'delete_all_articles' value.0.barcode %}" method="POST">
 								{% csrf_token %}
-								<button type="submit" class="btn btn-danger">Supprimer tous</button>
+								<button type="submit" class="btn btn-danger">Supprimer</button>
 							</form>
 							
 						</td>
