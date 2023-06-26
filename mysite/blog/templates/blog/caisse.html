@@ -5,6 +5,9 @@
 	<div class="title text-center">
 		<h1>Liste des Ventes</h1>
 		<form method="POST">
+			{% if error_message %}
+    <div class="error">{{ error_message }}</div>
+{% endif %}
 			{% csrf_token %}
 			{% if messages %}
 				<div class="alert alert-danger">
@@ -40,7 +43,7 @@
 	</div>
 
 	<div class="display component text-center">
-		<!-- Article -->
+		
 		<table class="table article text-center">
 			<thead>
 				<tr>
@@ -62,7 +65,7 @@
 					<td>{{ value.0.barcode }}</td>
 					<td>{{ value.0.price }}</td>
 					<td>{{ value.1 }}</td>
-					<td>{{ value.0.provider.name }}</td> <!-- Add provider name column -->
+					<td>{{ value.0.provider.name }}</td> 
 					<td>
 						{% if value.0.client %}
 							{{ value.0.client.name }}
