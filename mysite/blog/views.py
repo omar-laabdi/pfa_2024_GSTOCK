@@ -193,7 +193,6 @@ def delete_article(request, article_id):
 def caisse(request):
     list_article = {}
     list_key = {}
-    error_message = None
 
     if request.method == 'POST':
         barcode = request.POST.get('barcode')
@@ -207,7 +206,8 @@ def caisse(request):
             try:
                 article = Article.objects.get(barcode=barcode)
                 if qty > article.stock:
-                    error_message = 'The quantity is higher than the stock we have.'
+                    messages.error(request, 'The quantity is higher than the stock we have.')
+                    
                 else:
                  if 'listkey' in request.session:
                     list_key = request.session.get('listkey')
@@ -233,10 +233,10 @@ def caisse(request):
             article = Article.objects.select_related('provider', 'client').get(barcode=int(key))
             list_article[article.barcode] = [article, value]
     except Article.DoesNotExist:
-        messages.error(request, 'Product unavailable.')
+        pass
 
     clients = Client.objects.all()  # Retrieve all clients
-    return render(request, 'blog/caisse.html', {'listarticles': list_article, 'listkeys': list_key, 'clients': clients, 'error_message': error_message })
+    return render(request, 'blog/caisse.html', {'listarticles': list_article, 'listkeys': list_key, 'clients': clients })
 
 
 
