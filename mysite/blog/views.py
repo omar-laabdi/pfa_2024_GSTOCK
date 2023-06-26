@@ -2,7 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from blog.models import Provider, Article ,Client
 from django.contrib import messages
-
+from django.contrib.auth import logout
 
 
 
@@ -12,6 +12,10 @@ def home(request):
 
 def login(request):
     return render(request, 'blog/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 def provider(request):
     list_provider = Provider.objects.all().order_by('-name')
