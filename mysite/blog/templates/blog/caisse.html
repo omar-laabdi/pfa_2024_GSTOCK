@@ -3,9 +3,16 @@
 {% block body %}
 <div class="content">
 	<div class="title text-center">
-		<h1>Achat en cours</h1>
+		<h1>Liste des Ventes</h1>
 		<form method="POST">
 			{% csrf_token %}
+			{% if messages %}
+				<div class="alert alert-danger">
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				</div>
+			{% endif %}
 			<div class="form-row">
 				<div class="form-group">
 					<label for="barcode">Code barre</label>
@@ -24,7 +31,6 @@
                         {% endfor %}
                     </select>
                 </div>
-				
 				
 				<div class="form-group mt-4 pt-2 ml-3">
 					<button type="submit" class="btn btn-info">Ajouter</button>
@@ -82,7 +88,7 @@
 		<form action="{% url 'paiement' %}" method="post" class="mt-4">
 			
 			{% csrf_token %}
-			<button type="submit" class="btn btn-success">Paiement</button>
+			<button type="submit" class="btn btn-success">Valider</button>
 		</form>
 	</div>
 </div>
