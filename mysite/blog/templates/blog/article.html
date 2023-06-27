@@ -1,47 +1,66 @@
-{% extends 'blog/layout.html' %} 
-{% block body %}
+{% extends 'blog/layout.html' %} {% block body %}
 <div class="content">
-    <input class="btn btn-primary" type="button" value="Retour" onClick="javascript:history.go(-1);">
-    
-    <div class="title text-center">
-        <h1>Liste des Produits</h1>
-        <a class="btn btn-primary mt-2 mb-3" href="{% url 'new_article' %}" role="button">Ajouter</a>
-        <a class="btn btn-primary mt-2 mb-3" href="{% url 'stock' %}" role="button">Afficher Stocks</a>
-    </div>
+  <input
+    class="btn btn-primary"
+    type="button"
+    value="Retour"
+    onClick="javascript:history.go(-1);"
+  />
 
-    <div class="display component text-center">
-        <!-- Article -->
-        <table class="table article">
-            <thead>
-                <tr>
-                    <th scope="col">Code-barre</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Prix</th>
-                    <th scope="col">Quantité</th>
-                    <th scope="col">Fournisseur</th>
-                    <th scope="col">Actions</th>
-                    <th scope="col">Date d'ajout</th>
-                    <th scope="col">Dernière modification</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for article in listarticle %}
-                <tr class="{{ article.id }}">
-					<td>{{ article.barcode }}</td>
-                    <td>{{ article.name }}</td>
-                    <td>{{ article.price }}</td>
-                    <td>{{ article.quantite }}</td>
-                    <td>{{ article.provider }}</td>
-                    <td>
-                        <a href="{% url 'edit_article' article.id %}" class="btn btn-warning">Modifier</a>
-                        <a href="{% url 'delete_article' article.id %}" class="btn btn-danger">Supprimer</a>
-                    </td>
-                    <td>{{ article.date_added }}</td>
-                    <td>{{ article.last_modified }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <div class="title text-center">
+    <h1>Liste des Produits</h1>
+    <a
+      class="btn btn-primary mt-2 mb-3"
+      href="{% url 'new_article' %}"
+      role="button"
+      >Ajouter</a
+    >
+    <a class="btn btn-primary mt-2 mb-3" href="{% url 'stock' %}" role="button"
+      >Afficher Stocks</a
+    >
+  </div>
+
+  <div class="display component text-center">
+    <!-- Article -->
+    <table class="table article">
+      <thead>
+        <tr>
+          <th scope="col">Code-barre</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Prix</th>
+          <th scope="col">Quantité</th>
+          <th scope="col">Fournisseur</th>
+          <th scope="col">Actions</th>
+          <th scope="col">Date d'ajout</th>
+          <th scope="col">Dernière modification</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in listarticle %}
+        <tr class="{{ article.id }}">
+          <td>{{ article.barcode }}</td>
+          <td>{{ article.name }}</td>
+          <td>{{ article.price }}</td>
+          <td>{{ article.quantite }}</td>
+          <td>{{ article.provider }}</td>
+          <td>
+            <a
+              href="{% url 'edit_article' article.id %}"
+              class="btn btn-warning"
+              >Modifier</a
+            >
+            <a
+              href="{% url 'delete_article' article.barcode %}"
+              class="btn btn-danger"
+              >Supprimer</a
+            >
+          </td>
+          <td>{{ article.date_added }}</td>
+          <td>{{ article.last_modified }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
