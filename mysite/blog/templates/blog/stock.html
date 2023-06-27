@@ -1,0 +1,33 @@
+{% extends 'blog/layout.html' %} 
+{% block body %}
+<div class="content">
+    <input class="btn btn-primary" type="button" value="Retour" onClick="javascript:history.go(-1);">
+    
+    <div class="title text-center">
+        <h1>Liste des Stocks</h1>
+        <a class="btn btn-primary mt-2 mb-3" href="{% url 'new_stock' %}" role="button">Ajouter</a>
+    </div>
+
+    <div class="display component text-center">
+        <!-- Stock -->
+        <table class="table stock">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom de l'article</th>
+                    <th scope="col">Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stock_list %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ stock.article.name }}</td>
+                    <td>{{ stock.stock }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

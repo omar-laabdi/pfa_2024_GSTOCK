@@ -26,7 +26,7 @@ class Article(models.Model):
     name = models.CharField(max_length=500, default="")
     price = models.FloatField()
     barcode = models.IntegerField()
-    stock = models.IntegerField(default=0)
+    quantite = models.IntegerField(default=0)
     provider = models.ForeignKey('Provider', on_delete=models.CASCADE, default=DEFAULT_ID)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -35,7 +35,9 @@ class Article(models.Model):
     def __str__(self):
         return self.name
 
-
-
+class Stock(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    stock = models.IntegerField(default=0)
+    
     def __str__(self):
-        return self.name
+        return self.article.name

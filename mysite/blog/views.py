@@ -1,8 +1,9 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from blog.models import Provider, Article ,Client
+from blog.models import Provider, Article ,Client,Stock
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.db.models import F
 
 
 
@@ -27,8 +28,12 @@ def client(request):
 
 
 def article(request):
-    list_article = Article.objects.all().order_by('-name')
-    return render(request, 'blog/article.html', {'listarticle': list_article})
+    listarticle = Article.objects.all().order_by('-name')
+    return render(request, 'blog/article.html', {'listarticle': listarticle})
+
+def stock(request):
+    stock_list = Stock.objects.all()
+    return render(request, 'blog/stock.html', {'stock_list': stock_list})
 
 
 
@@ -130,10 +135,10 @@ def new_article(request):
         name = request.POST.get('name')
         price = request.POST.get('price')
         barcode = request.POST.get('barcode')
-        stock = request.POST.get('stock')
+        quantite = request.POST.get('quantite')
         provider_id = request.POST.get('provider')
         
-        if not name or not price or not barcode or not stock:
+        if not name or not price or not barcode or not quantite:
             messages.error(request, 'Please fill in all fields.')
             return redirect('new_article')
         
@@ -145,7 +150,7 @@ def new_article(request):
             messages.error(request, 'An article with the same barcode already exists.')
             return redirect('new_article')
 
-        current_article = Article(name=name, price=price, barcode=barcode, stock=stock)
+        current_article = Article(name=name, price=price, barcode=barcode, quantite=quantite)
         if provider_id:
             current_article.provider_id = provider_id
         current_article.save()
@@ -165,8 +170,8 @@ def edit_article(request, article_id):
             current_article.price = request.POST.get('price')
         if request.POST.get('barcode') != "":
             current_article.barcode = request.POST.get('barcode')
-        if request.POST.get('stock') != "":
-            current_article.stock = request.POST.get('stock')
+        if request.POST.get('quantite') != "":
+            current_article.quantite = request.POST.get('quantite')
         if request.POST.get('provider') != "":
             current_article.provider = Provider.objects.get(id=request.POST.get('provider'))
 
@@ -205,8 +210,8 @@ def caisse(request):
         else:
             try:
                 article = Article.objects.get(barcode=barcode)
-                if qty > article.stock:
-                    messages.error(request, 'The quantity is higher than the stock we have.')
+                if qty > article.quantite:
+                    messages.error(request, 'The quantity is higher than the quantite we have.')
                     
                 else:
                  if 'listkey' in request.session:
@@ -246,7 +251,7 @@ def paiement(request):
     
     for key, value in list_key.items():
         article : Article() = Article.objects.get(barcode=int(key))
-        article.stock -= value
+        article.quantite -= value
         article.save()
         
     return redirect('caisse')
@@ -259,4 +264,26 @@ def delete_all_articles(request, barcode):
 
     request.session['listkey'] = list_key
     return HttpResponseRedirect('/caisse')
+
+def new_stock(request):
+    if request.method == 'POST':
+        article_id = request.POST.get('article')
+        stock_value = request.POST.get('stock')
+        
+        if not article_id or not stock_value:
+            messages.error(request, 'Please fill in all fields.')
+            return redirect('new_stock')
+        
+        try:
+            article = Article.objects.get(id=article_id)
+            stock = Stock(article=article, stock=stock_value)
+            stock.save()
+            return redirect('stock')
+        except Article.DoesNotExist:
+            messages.error(request, 'Article does not exist.')
+            return redirect('new_stock')
+    else:
+        list_article = Article.objects.all().order_by('-name')
+        return render(request, 'blog/new_stock.html', {'list_article': list_article})
+
 

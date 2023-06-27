@@ -22,6 +22,9 @@ urlpatterns = [
     path('caisse', views.caisse, name='caisse'),
     path('paiement', views.paiement, name='paiement'),
     path('delete/all/<str:barcode>/', views.delete_all_articles, name='delete_all_articles'),
+    path('articles/', views.article, name='article'),
+    path('stock/', views.stock, name='stock'),
+    path('stock/new/', views.new_stock, name='new_stock'),
 
 ]
 
