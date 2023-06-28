@@ -21,14 +21,15 @@ urlpatterns = [
     path("edit_client/<client_id>", views.edit_client, name="edit_client"),
     path("new_client", views.new_client, name="new_client"),
     path("delete_client/<client_id>", views.delete_client, name="delete_client"),
-    path("caisse", views.caisse, name="caisse"),
+    path("caisse", views.vente, name="caisse"),
     path("paiement", views.paiement, name="paiement"),
     path(
-        "delete/all/<str:barcode>/",
+        "delete/all/<str:commande_id>/",
         views.delete_all_articles,
         name="delete_all_articles",
     ),
     path("articles/", views.article, name="article"),
     path("stock/", views.stock, name="stock"),
-    path("stock/new/", views.new_stock, name="new_stock"),
+    path("delete_stock/<str:name>", views.delete_stock, name="delete_stock"),
+    path("historique_commandes/", views.historique_commande, name="historique"),
 ]

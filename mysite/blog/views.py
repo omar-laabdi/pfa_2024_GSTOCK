@@ -1,9 +1,12 @@
+from multiprocessing import Value
+from os import name
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from blog.models import Provider, Article, Client, Stock
+from blog.models import Commande, HistCommande, Provider, Article, Client, Stock
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import F
+from django.db.models import Sum
 
 
 def home(request):
@@ -34,9 +37,28 @@ def article(request):
     return render(request, "blog/article.html", {"listarticle": listarticle})
 
 
+# def stock(request):
+#     stock_list = Stock.objects.all()
+#     search_query = request.GET.get("search", "")
+#     articles = Article.objects.all()
+#     context = {
+#         "search_query": search_query,
+#         "articles": articles,
+#         "stock_list": stock_list,
+#     }
+#     return render(request, "blog/stock.html", context)
 def stock(request):
-    stock_list = Stock.objects.all()
-    return render(request, "blog/stock.html", {"stock_list": stock_list})
+    search = request.GET.get("search", "")
+    if search != "":
+        stock_list = Stock.objects.filter(name__icontains=search)
+    else:
+        stock_list = Stock.objects.all()
+
+    context = {
+        "search": search,
+        "stock_list": stock_list,
+    }
+    return render(request, "blog/stock.html", context)
 
 
 def edit_provider(request, provide_id):
@@ -239,36 +261,131 @@ def delete_client(request, client_id):
 
 
 def delete_article(request, article_barcode):
-    stock = Stock.objects.get(name=Article.objects.get(barcode=article_barcode))
-    article = Article.objects.get(barcode=article_barcode)
-    stock.stock = stock.stock - article.quantite
-    stock.save()
-    Article.objects.get(barcode=article_barcode).delete()
+    try:
+        article = Article.objects.get(barcode=article_barcode)
+        stock = Stock.objects.get(name=article)
+        stock.stock -= article.quantite
+        stock.save()
+        article.delete()
+    except Stock.DoesNotExist:
+        pass
     return HttpResponseRedirect("/article")
 
 
+def delete_stock(request, name):
+    Stock.objects.get(name=name).delete()
+
+    try:
+        article = Article.objects.get(name=name)
+        article.delete()
+    except Article.DoesNotExist:
+        pass
+
+    return HttpResponseRedirect("/stock")
+
+
 def vente(request):
-    pass
+    listeArticle = {}
+    listkey = {}
+    listClient = {}
+    create_commande = False
+
+    if request.method == "POST":
+        name = request.POST.get("produit")
+        quantite = int(request.POST.get("qty"))
+        client_id = request.POST.get("client")
+        if not name or not quantite or not client_id:
+            # One or more required fields are missing
+            messages.error(request, "Please fill in all required fields.")
+        else:
+            try:
+                quantite = int(quantite)
+                client_id = int(client_id)
+                article = Article.objects.get(name=name)
+                stock = Stock.objects.get(name=article.name)
+                if quantite > stock.stock:
+                    messages.error(request, "Depasser quantite dans stock")
+                else:
+                    if "listkey" in request.session:
+                        listkey = request.session.get("listkey")
+                        listkey[article.name] = quantite
+
+                    request.session["listkey"] = listkey
+
+                listClient["id"] = client_id
+
+                request.session["listClient"] = listClient
+
+                request.session["listkey"] = listkey
+
+                create_commande = True
+
+            except Article.DoesNotExist:
+                messages.error(request, "Article  n'existes pas!!! (1)")
+
+    if "listkey" not in request.session:
+        request.session["listkey"] = listkey
+    else:
+        listkey = request.session["listkey"]
+
+    if "listClient" not in request.session:
+        request.session["listClient"] = listClient
+    else:
+        listClient = request.session["listClient"]
+
+    if create_commande:
+        try:
+            for key, value in listkey.items():
+                article = Article.objects.select_related("provider").get(name=key)
+                listeArticle[article.name] = [article, value]
+                Commande.objects.create(
+                    article=article,
+                    client=Client.objects.get(id=listClient["id"]),
+                    quantite=value,
+                )
+
+        except Article.DoesNotExist:
+            messages.error(request, "Article n'existes pas!!! (2)")
+
+    clients = Client.objects.all()
+
+    commandes = Commande.objects.all()
+
+    articles = Article.objects.all()
+
+    context = {
+        "clients": clients,
+        "commandes": commandes,
+        "articles": articles,
+        "listarticles": listeArticle,
+        "listkey": listkey,
+        "listClient": listClient,
+    }
+    return render(request, "blog/caisse.html", context)
 
 
 def paiement(request):
-    list_key = request.session["listkey"]
-    request.session["listkey"] = {}
+    total_quantite = Commande.objects.aggregate(total=Sum("quantite"))["total"]
 
-    for key, value in list_key.items():
-        article: Article() = Article.objects.get(barcode=int(key))
-        article.quantite -= value
-        article.save()
+    commandes = Commande.objects.all()
 
+    for commande in commandes:
+        stock = Stock.objects.get(name=commande.article)
+        stock.stock -= total_quantite
+        stock.save()
+        HistCommande.objects.create(
+            article=commande.article,
+            client=commande.client,
+            quantite=commande.quantite,
+        )
+
+    Commande.objects.all().delete()
     return redirect("caisse")
 
 
-def delete_all_articles(request, barcode):
-    list_key = request.session.get("listkey", {})
-    if barcode in list_key:
-        del list_key[barcode]
+def delete_all_articles(request, commande_id):
+    Commande.objects.get(id=commande_id).delete()
 
-    request.session["listkey"] = list_key
     return HttpResponseRedirect("/caisse")
 
 
@@ -292,3 +409,26 @@ def new_stock(request):
     else:
         list_article = Article.objects.all().order_by("-name")
         return render(request, "blog/new_stock.html", {"list_article": list_article})
+
+
+# def historique_commande(request):
+#     hist_commandes = HistCommande.objects.all()
+
+#     context = {
+#         "hist_commandes": hist_commandes,
+#     }
+
+
+#     return render(request, "blog/historique_commande.html", context)
+def historique_commande(request):
+    search = request.GET.get("search", "")
+    if search != "":
+        hist_commandes = HistCommande.objects.filter(article__name__icontains=search)
+    else:
+        hist_commandes = HistCommande.objects.all()
+
+    context = {
+        "search": search,
+        "hist_commandes": hist_commandes,
+    }
+    return render(request, "blog/historique_commande.html", context)

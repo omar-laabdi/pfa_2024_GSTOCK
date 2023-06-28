@@ -1,99 +1,101 @@
-{% extends 'blog/layout.html' %} 
-
-{% block body %}
+{% extends 'blog/layout.html' %} {% block body %}
 <div class="content">
-	<div class="title text-center">
-		<h1>Liste des Ventes</h1>
-		<form method="POST">
-			{% if error_message %}
-    <div class="error">{{ error_message }}</div>
-{% endif %}
-			{% csrf_token %}
-			{% if messages %}
-				<div class="alert alert-danger">
-					{% for message in messages %}
-						{{ message }}
-					{% endfor %}
-				</div>
-			{% endif %}
-			<div class="form-row">
-				<div class="form-group">
-					<label for="barcode">Code barre</label>
-					<input required="required" type="number" class="form-control" name="barcode">
-				</div>
-				<div class="form-group">
-					<label for="barcode">Quantite</label>
-					<input required="required" type="number" class="form-control" name="qty">
-				</div>
-				<div class="form-group">
-                    <label for="client">Vendre à</label>
-                    <select class="form-control" name="client">
-                        <option value="">Sélectionner un client</option>
-                        {% for client in clients %}
-                        <option value="{{ client.id }}">{{ client.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-				
-				<div class="form-group mt-4 pt-2 ml-3">
-					<button type="submit" class="btn btn-info">Ajouter</button>
-				</div>
-			</div>
-		</form>
-	</div>
+  <input
+    class="btn btn-primary"
+    type="button"
+    value="Retour"
+    onClick="javascript:history.go(-1);"
+  />
+  <div class="title text-center">
+    <h1>Liste des Ventes</h1>
+    <form method="POST">
+      {% if error_message %}
+      <div class="error">{{ error_message }}</div>
+      {% endif %} {% csrf_token %} {% if messages %}
+      <div class="alert alert-danger">
+        {% for message in messages %} {{ message }} {% endfor %}
+      </div>
+      {% endif %}
+      <div class="form-row">
+        <div class="form-group">
+          <label for="client">Vendre à</label>
+          <select class="form-control" name="produit">
+            <option value="">Sélectionner un produit</option>
+            {% for article in articles %}
+            <option value="{{ article.name }}">{{ article.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="barcode">Quantite</label>
+          <input
+            required="required"
+            type="number"
+            class="form-control"
+            name="qty"
+          />
+        </div>
+        <div class="form-group">
+          <label for="client">Vendre à</label>
+          <select class="form-control" name="client">
+            <option value="">Sélectionner un client</option>
+            {% for client in clients %}
+            <option value="{{ client.id }}">{{ client.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-	<div class="display component text-center">
-		
-		<table class="table article text-center">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Nom</th>
-					<th scope="col">Code barre</th>
-					<th scope="col">Prix unitaire</th>
-					<th scope="col">Nombre d'article</th>
-					<th scope="col">Fournisseur</th>
-					<th scope="col">Vendre à</th>
-					<th scope="col">Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for key, value in listarticles.items %}
-				<tr class="{{ value.0.id }}">
-					<th scope="row">{{ forloop.counter }}</th>
-					<td>{{ value.0.name }}</td>
-					<td>{{ value.0.barcode }}</td>
-					<td>{{ value.0.price }}</td>
-					<td>{{ value.1 }}</td>
-					<td>{{ value.0.provider.name }}</td> 
-					<td>
-						{% if value.0.client %}
-							{{ value.0.client.name }}
-						{% else %}
-							N/A
-						{% endif %}
-					</td>
-					<td>
+        <div class="form-group mt-4 pt-2 ml-3">
+          <button type="submit" class="btn btn-info">Ajouter</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
-						<td class="d-flex align-items-center justify-content-around ">
-							
-							<form action="{% url 'delete_all_articles' value.0.barcode %}" method="POST">
-								{% csrf_token %}
-								<button type="submit" class="btn btn-danger">Supprimer</button>
-							</form>
-							
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		
-		<form action="{% url 'paiement' %}" method="post" class="mt-4">
-			
-			{% csrf_token %}
-			<button type="submit" class="btn btn-success">Valider</button>
-		</form>
-	</div>
+  <div class="display component text-center">
+    <table class="table article text-center">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Code barre</th>
+          <th scope="col">Prix unitaire</th>
+          <th scope="col">Nombre d'article</th>
+          <th scope="col">Fournisseur</th>
+          <th scope="col">Vendre à</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for commande in commandes %}
+        <tr class="{{ commande.id }}">
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ commande.article.name }}</td>
+          <td>{{ commande.article.barcode }}</td>
+          <td>{{ commande.article.price }}</td>
+          <td>{{ commande.quantite }}</td>
+          <td>{{ commande.article.provider.name }}</td>
+          <td>{{ commande.client.name }}</td>
+
+          <td class="d-flex align-items-center justify-content-around">
+            <form
+              action="{% url 'delete_all_articles' commande.id %}"
+              method="POST"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <form action="{% url 'paiement' %}" method="post" class="mt-4">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success">Valider</button>
+    </form>
+  </div>
 </div>
 
 {% endblock %}

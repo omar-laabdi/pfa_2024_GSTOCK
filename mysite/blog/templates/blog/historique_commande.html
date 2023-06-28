@@ -1,0 +1,50 @@
+{% extends 'blog/layout.html' %} {% block body %}
+<div class="edit-background">
+  <input
+    class="btn btn-primary"
+    type="button"
+    value="Retour"
+    onClick="javascript:history.go(-1);"
+  />
+  <div class="search-bar">
+    <form method="GET" action="{% url 'historique' %}">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by name"
+        value="{{ search }}"
+      />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+  <div class="edit-title text-center">
+    <div class="">
+      <h1>Historique des Commandes</h1>
+    </div>
+  </div>
+  <table class="table article text-center">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Prix unitaire</th>
+        <th scope="col">Nombre d'article</th>
+        <th scope="col">Fournisseur</th>
+        <th scope="col">Vendu à</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for commande in hist_commandes %}
+      <tr class="{{ commande.id }}">
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ commande.article.name }}</td>
+        <td>{{ commande.article.price }}</td>
+        <td>{{ commande.quantite }}</td>
+        <td>{{ commande.article.provider.name }}</td>
+        <td>{{ commande.client.name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

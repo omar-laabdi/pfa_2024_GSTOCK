@@ -6,15 +6,19 @@
     value="Retour"
     onClick="javascript:history.go(-1);"
   />
-
+  <div class="search-bar">
+    <form method="GET" action="{% url 'stock' %}">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by name"
+        value="{{ search }}"
+      />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
   <div class="title text-center">
     <h1>Liste des Stocks</h1>
-    <a
-      class="btn btn-primary mt-2 mb-3"
-      href="{% url 'new_stock' %}"
-      role="button"
-      >Ajouter</a
-    >
   </div>
 
   <div class="display component text-center">
@@ -25,6 +29,9 @@
           <th scope="col">#</th>
           <th scope="col">Nom de l'article</th>
           <th scope="col">Stock</th>
+          <th scope="col">Prix Unitaire</th>
+          <th scope="col">Dernier Modification</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -33,6 +40,13 @@
           <th scope="row">{{ forloop.counter }}</th>
           <td>{{ stock.name }}</td>
           <td>{{ stock.stock }}</td>
+          <td>{{ stock.article.price }}</td>
+          <td>{{ stock.last_modified }}</td>
+          <td>
+            <a href="{% url 'delete_stock' stock.name %}" class="btn btn-danger"
+              >Supprimer</a
+            >
+          </td>
         </tr>
         {% endfor %}
       </tbody>
