@@ -1,35 +1,37 @@
 {% extends 'blog/layout.html' %} {% block body %}
 <div class="content">
-	<input class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
+	<input style="background-color: rgb(142 102 74);" class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
 	
-	<div class="title text-center">
+	<div style="color: #fff" class="title text-center">
 		<h1>Liste des Fournisseurs</h1>
-		<a class="btn btn-primary mt-2 mb-3" href="{% url 'new_provider' %}" role="button">Nouveau</a>
+		<div style="text-align: right;">
+		<a style="background-color: rgb(142 102 74);" class="btn btn-primary mt-2 mb-3" href="{% url 'new_provider' %}" role="button">Nouveau</a>
 	</div>
-
+</div>
 	<div class="display component text-center">
 		<!-- Provider -->
 		<table class="table provider">
 			<thead>
 				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Nom</th>
-					<th scope="col">Portable</th>
-					<th scope="col">Adresse</th>
-					<th scope="col">Code postal</th>
-					<th scope="col">Modification / Suppresion</th>
+					<th style="color: #fff" scope="col">#</th>
+					<th style="color: #fff" scope="col">Nom</th>
+					<th style="color: #fff" scope="col">Portable</th>
+					<th style="color: #fff" scope="col">Adresse</th>
+					<th style="color: #fff" scope="col">Code postal</th>
+					<th style="color: #fff" scope="col">Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for provider in listprovider %}
 				<tr class="{{provider.id}}">
 					<th scope="row">{{forloop.counter}}</th>
-					<td>{{provider.name}}</td>
-					<td>{{provider.phone}}</td>
-					<td>{{provider.address}}</td>
-					<td>{{provider.zip_code}}</td>
-					<td><a href="{% url 'edit_provider' provider.id %}"
-						class="btn btn-warning">Modifier</a> <a
+					<td style="color: #fff">{{provider.name}}</td>
+					<td style="color: #fff">{{provider.phone}}</td>
+					<td style="color: #fff">{{provider.address}}</td>
+					<td style="color: #fff">{{provider.zip_code}}</td>
+					<td ><a style="background-color: rgb(196, 145, 109);" href="{% url 'edit_provider' provider.id %}"
+						class="btn btn-warning">Modifier</a>
+						 <a style="background-color: #b40404e6;"
 						href="{% url 'delete_provider' provider.id %}"
 						class="btn btn-danger">Supprimer</a></td>
 				</tr>

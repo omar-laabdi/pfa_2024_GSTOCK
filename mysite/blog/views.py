@@ -36,17 +36,6 @@ def article(request):
     listarticle = Article.objects.all().order_by("-name")
     return render(request, "blog/article.html", {"listarticle": listarticle})
 
-
-# def stock(request):
-#     stock_list = Stock.objects.all()
-#     search_query = request.GET.get("search", "")
-#     articles = Article.objects.all()
-#     context = {
-#         "search_query": search_query,
-#         "articles": articles,
-#         "stock_list": stock_list,
-#     }
-#     return render(request, "blog/stock.html", context)
 def stock(request):
     search = request.GET.get("search", "")
     if search != "":
@@ -60,44 +49,47 @@ def stock(request):
     }
     return render(request, "blog/stock.html", context)
 
-
 def edit_provider(request, provide_id):
     current_provider = Provider.objects.get(id=provide_id)
-    if request.POST:
-        if request.POST.get("name") != "":
-            current_provider.name = request.POST.get("name")
-        if request.POST.get("address") != "":
-            current_provider.address = request.POST.get("address")
-        if request.POST.get("zip_code") != "":
-            current_provider.zip_code = request.POST.get("zip_code")
-        if request.POST.get("phone") != "":
-            current_provider.phone = request.POST.get("phone")
+    if request.method == "POST":
+        name = request.POST.get("name")
+        address = request.POST.get("address")
+        zip_code = request.POST.get("zip_code")
+        phone = request.POST.get("phone")
 
-        current_provider.save()
-        return HttpResponseRedirect("/provider")
+        if name != "" and address != "" and zip_code != "" and phone != "":
+            current_provider.name = name
+            current_provider.address = address
+            current_provider.zip_code = zip_code
+            current_provider.phone = phone
+            current_provider.save()
+            return redirect("/provider")
+        else:
+            messages.error(request, "Please fill in all the fields.")
+            return redirect("edit_provider", provide_id=provide_id)
     else:
-        return render(
-            request, "blog/edit_provider.html", {"provider": current_provider}
-        )
-
+        return render(request, "blog/edit_provider.html", {"provider": current_provider})
 
 def edit_client(request, client_id):
     current_client = Client.objects.get(id=client_id)
-    if request.POST:
-        if request.POST.get("name") != "":
-            current_client.name = request.POST.get("name")
-        if request.POST.get("address") != "":
-            current_client.address = request.POST.get("address")
-        if request.POST.get("zip_code") != "":
-            current_client.zip_code = request.POST.get("zip_code")
-        if request.POST.get("phone") != "":
-            current_client.phone = request.POST.get("phone")
+    if request.method == "POST":
+        name = request.POST.get("name")
+        address = request.POST.get("address")
+        zip_code = request.POST.get("zip_code")
+        phone = request.POST.get("phone")
 
-        current_client.save()
-        return HttpResponseRedirect("/client")
+        if name != "" and address != "" and zip_code != "" and phone != "":
+            current_client.name = name
+            current_client.address = address
+            current_client.zip_code = zip_code
+            current_client.phone = phone
+            current_client.save()
+            return redirect("/client")
+        else:
+            messages.error(request, "Please fill in all the fields.")
+            return redirect("edit_client", client_id=client_id)
     else:
         return render(request, "blog/edit_client.html", {"client": current_client})
-
 
 def new_provider(request):
     if request.method == "POST":
@@ -191,10 +183,6 @@ def new_article(request):
             messages.error(request, "Please fill in all fields.")
             return redirect("new_article")
 
-        # Check if an article with the same barcode already exists
-        # elif Article.objects.filter(name=name).exists():
-        #     messages.error(request, 'An article with the same name already exists.')
-        #     return redirect('new_article')
         elif Article.objects.filter(barcode=barcode).exists():
             messages.error(request, "An article with the same barcode already exists.")
             return redirect("new_article")
@@ -226,22 +214,24 @@ def new_article(request):
 def edit_article(request, article_id):
     current_article = Article.objects.get(id=article_id)
     list_provider = Provider.objects.all().order_by("-name")
-    if request.POST:
-        if request.POST.get("name") != "":
-            current_article.name = request.POST.get("name")
-        if request.POST.get("price") != "":
-            current_article.price = request.POST.get("price")
-        if request.POST.get("barcode") != "":
-            current_article.barcode = request.POST.get("barcode")
-        if request.POST.get("quantite") != "":
-            current_article.quantite = request.POST.get("quantite")
-        if request.POST.get("provider") != "":
-            current_article.provider = Provider.objects.get(
-                id=request.POST.get("provider")
-            )
+    if request.method == "POST":
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        barcode = request.POST.get("barcode")
+        quantite = request.POST.get("quantite")
+        provider_id = request.POST.get("provider")
 
-        current_article.save()
-        return HttpResponseRedirect("/article")
+        if name != "" and price != "" and barcode != "" and quantite != "" and provider_id != "":
+            current_article.name = name
+            current_article.price = price
+            current_article.barcode = barcode
+            current_article.quantite = quantite
+            current_article.provider = Provider.objects.get(id=provider_id)
+            current_article.save()
+            return redirect("/article")
+        else:
+            messages.error(request, "Please fill in all the fields.")
+            return redirect("edit_article", article_id=article_id)
     else:
         return render(
             request,
@@ -410,16 +400,6 @@ def new_stock(request):
         list_article = Article.objects.all().order_by("-name")
         return render(request, "blog/new_stock.html", {"list_article": list_article})
 
-
-# def historique_commande(request):
-#     hist_commandes = HistCommande.objects.all()
-
-#     context = {
-#         "hist_commandes": hist_commandes,
-#     }
-
-
-#     return render(request, "blog/historique_commande.html", context)
 def historique_commande(request):
     search = request.GET.get("search", "")
     if search != "":

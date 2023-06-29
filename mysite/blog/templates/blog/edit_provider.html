@@ -1,13 +1,19 @@
 {% extends 'blog/layout.html' %} {% block body %}
 <div class="edit-background">
-	<input class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
+	<input style="background-color: rgb(142 102 74);" class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
 	
 	<div class="edit-title text-center">
 		<div class="">
-			<h1>Modifier {{provider.name}}</h1>
+			<h1 style="color: #fff">Modifier {{provider.name}}</h1>
 		</div>
 	</div>
-
+	{% if messages %}
+    <ul style="color: #fff" class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 	<div class="edit-body">
 		<div class="edit-component edit-left-box">
 			<div class="edit-box edit-provider-informations">
@@ -15,24 +21,24 @@
 					{% csrf_token %}
 					<div class="form-row">
 						<div class="form-group col-md-6">
-							<label for="name">Nom</label> <input type="text"
+							<label style="color: #fff" for="name">Nom</label> <input type="text"
 								class="form-control" name="name" value="{{provider.name}}">
 						</div>
 						<div class="form-group col-md-6">
-							<label for="phone">Phone</label> <input type="text"
+							<label style="color: #fff" for="phone">Phone</label> <input type="text"
 								class="form-control" name="phone" value="{{provider.phone}}">
 						</div>
 						<div class="form-group col-md-6">
-							<label for="address">Adresse</label> <input type="text"
+							<label style="color: #fff" for="address">Adresse</label> <input type="text"
 								class="form-control" name="address" value="{{provider.address}}">
 						</div>
 						<div class="form-group col-md-6">
-							<label for="zip_code">Code postal</label> <input type="text"
+							<label style="color: #fff" for="zip_code">Code postal</label> <input type="text"
 								class="form-control" name="zip_code"
 								value="{{provider.zip_code}}">
 						</div>
 					</div>
-					<button type="submit" class="btn btn-info">Modifier</button>
+					<button style="background-color: rgb(196, 145, 109);" type="submit" class="btn btn-info">Modifier</button>
 				</form>
 			</div>
 		</div>

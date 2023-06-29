@@ -1,12 +1,12 @@
 {% extends 'blog/layout.html' %} {% block body %}
-<div class="content">
-  <input
+<div  class="content">
+  <input style="background-color: rgb(142 102 74);"
     class="btn btn-primary"
     type="button"
     value="Retour"
     onClick="javascript:history.go(-1);"
   />
-  <div class="search-bar">
+  <div class="search-bar" style="float: right;">
     <form method="GET" action="{% url 'stock' %}">
       <input
         type="text"
@@ -14,36 +14,35 @@
         placeholder="Search by name"
         value="{{ search }}"
       />
-      <button type="submit" class="btn btn-primary">Search</button>
+      <button style="background-color: rgb(142 102 74);" type="submit" class="btn btn-primary mt-2 mb-3">Search</button>
     </form>
   </div>
-  <div class="title text-center">
-    <h1>Liste des Stocks</h1>
+  <div style="color: #fff" class="title text-center">
+    <h1>Liste des Produits</h1>
   </div>
-
+<br>
+</br>
   <div class="display component text-center">
     <!-- Stock -->
     <table class="table stock">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nom de l'article</th>
-          <th scope="col">Stock</th>
-          <th scope="col">Prix Unitaire</th>
-          <th scope="col">Dernier Modification</th>
-          <th scope="col">Action</th>
+          <th style="color: #fff" scope="col">#</th>
+          <th style="color: #fff" scope="col">Nom de l'article</th>
+          <th style="color: #fff" scope="col">Stock</th>
+          <th style="color: #fff" scope="col">Dernier Modification</th>
+          <th style="color: #fff" scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for stock in stock_list %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ stock.name }}</td>
-          <td>{{ stock.stock }}</td>
-          <td>{{ stock.article.price }}</td>
-          <td>{{ stock.last_modified }}</td>
+          <td style="color: #fff">{{ stock.name }}</td>
+          <td style="color: #fff">{{ stock.stock }}</td>
+          <td style="color: #fff">{{ stock.last_modified }}</td>
           <td>
-            <a href="{% url 'delete_stock' stock.name %}" class="btn btn-danger"
+            <a style="background-color: #b40404e6;" href="{% url 'delete_stock' stock.name %}" class="btn btn-danger"
               >Supprimer</a
             >
           </td>

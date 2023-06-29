@@ -12,7 +12,76 @@
       crossorigin="anonymous"
     />
   </head>
-
+  <style>
+    head{background-color:white;}
+    body {
+      background-image:linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.8)),url('https://mecaluxfr.cdnwm.com/blog/img/stock-minimum-entrepot-reapprovisionnement-marchandises.1.1.jpg');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      min-height:100vh;
+      flex-direction:column;
+      }
+      
+    nav{
+      padding:2% 4%;
+      display:flex;
+      justify-content: space-between;
+      }
+      .nav-links{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      }
+    nav ul{
+      display:flex;
+      list-style:none;
+      margin:auto;
+      }
+      nav ul li{
+      margin:0 10px;
+      }
+      nav div ul li a{
+      text-decoration:none;
+      font-size:15px;
+      text-transform: uppercase;
+      transition:0.5s;
+      }
+  
+      nav div ul li a:hover{
+      color:rgb(170 110 68);
+      }
+      nav div ul li a::after{
+      content:"";
+      display:block;
+      height:2px;
+      width:0;
+      background-color:rgb(170 110 68);
+      transition: 0.5s;
+      }
+      nav div ul li a:hover::after{
+      width:100%;
+      }
+      .glow {
+      font-size: 30px;
+      color: white;
+      text-align: center;
+      -webkit-animation: glow 1s ease-in-out infinite alternate;
+      -moz-animation: glow 1s ease-in-out infinite alternate;
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+    
+    @-webkit-keyframes glow {
+      from {
+        text-shadow: 0 0 5px #8B4513, 0 0 10px #A0522D, 0 0 15px #CD853F;
+      }
+    
+      to {
+        text-shadow: 0 0 10px #8B4513, 0 0 15px #D2691E, 0 0 20px #D2691E;
+      }
+    }
+    </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
       <a class="navbar-brand" href="">Gestion de stock</a>
@@ -32,17 +101,17 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link active" href="/provider"
-              >Fournisseurs <span class="sr-only">(current)</span></a
+              >Fournisseur <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item active">
             <a class="nav-link active" href="/client"
-              >Clients <span class="sr-only">(current)</span></a
+              >Client <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item active">
             <a class="nav-link active" href="/article"
-              >Produits <span class="sr-only">(current)</span></a
+              >Produit <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item active">
@@ -52,15 +121,11 @@
           </li>
           <li class="nav-item active">
             <a class="nav-link active" href="/caisse"
-              >Ventes <span class="sr-only">(current)</span></a
-            >
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link active" href="/historique_commandes"
-              >Historique <span class="sr-only">(current)</span></a
+              >Vente <span class="sr-only">(current)</span></a
             >
           </li>
         </ul>
+        <div style="text-align: right;">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link btn-danger btn text-light" href="/logout"

@@ -1,12 +1,15 @@
 {% extends 'blog/layout.html' %} {% block body %}
 <div class="content">
-  <input
+  <input style="background-color: rgb(142 102 74);"
     class="btn btn-primary"
     type="button"
     value="Retour"
     onClick="javascript:history.go(-1);"
   />
-  <div class="title text-center">
+  <div style="text-align: right;">
+  <button style="background-color: rgb(142 102 74);" onclick="window.location.href = '/historique_commandes';" class="btn btn-primary">Historique</button>
+</div>
+  <div style="color: #fff" class="title text-center">
     <h1>Liste des Ventes</h1>
     <form method="POST">
       {% if error_message %}
@@ -18,16 +21,16 @@
       {% endif %}
       <div class="form-row">
         <div class="form-group">
-          <label for="client">Vendre à</label>
+          <label style="color: #fff" for="client">Produit</label>
           <select class="form-control" name="produit">
-            <option value="">Sélectionner un produit</option>
+            <option  value="">Sélectionner un produit</option>
             {% for article in articles %}
             <option value="{{ article.name }}">{{ article.name }}</option>
             {% endfor %}
           </select>
         </div>
         <div class="form-group">
-          <label for="barcode">Quantite</label>
+          <label style="color: #fff" for="barcode">Quantite</label>
           <input
             required="required"
             type="number"
@@ -36,7 +39,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="client">Vendre à</label>
+          <label style="color: #fff" for="client">Vendre à</label>
           <select class="form-control" name="client">
             <option value="">Sélectionner un client</option>
             {% for client in clients %}
@@ -45,8 +48,8 @@
           </select>
         </div>
 
-        <div class="form-group mt-4 pt-2 ml-3">
-          <button type="submit" class="btn btn-info">Ajouter</button>
+        <div  class="form-group mt-4 pt-2 ml-3">
+          <button style="background-color: rgb(142 102 74);" type="submit" class="btn btn-info">Ajouter</button>
         </div>
       </div>
     </form>
@@ -56,26 +59,26 @@
     <table class="table article text-center">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nom</th>
-          <th scope="col">Code barre</th>
-          <th scope="col">Prix unitaire</th>
-          <th scope="col">Nombre d'article</th>
-          <th scope="col">Fournisseur</th>
-          <th scope="col">Vendre à</th>
-          <th scope="col">Action</th>
+          <th style="color: #fff" scope="col">#</th>
+          <th style="color: #fff" scope="col">Nom</th>
+          <th style="color: #fff" scope="col">Code barre</th>
+          <th style="color: #fff" scope="col">Prix unitaire</th>
+          <th style="color: #fff" scope="col">Nombre d'article</th>
+          <th style="color: #fff" scope="col">Fournisseur</th>
+          <th style="color: #fff" scope="col">Vendre à</th>
+          <th style="color: #fff" scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for commande in commandes %}
         <tr class="{{ commande.id }}">
           <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ commande.article.name }}</td>
-          <td>{{ commande.article.barcode }}</td>
-          <td>{{ commande.article.price }}</td>
-          <td>{{ commande.quantite }}</td>
-          <td>{{ commande.article.provider.name }}</td>
-          <td>{{ commande.client.name }}</td>
+          <td style="color: #fff">{{ commande.article.name }}</td>
+          <td style="color: #fff">{{ commande.article.barcode }}</td>
+          <td style="color: #fff">{{ commande.article.price }}</td>
+          <td style="color: #fff">{{ commande.quantite }}</td>
+          <td style="color: #fff">{{ commande.article.provider.name }}</td>
+          <td style="color: #fff">{{ commande.client.name }}</td>
 
           <td class="d-flex align-items-center justify-content-around">
             <form
@@ -83,7 +86,7 @@
               method="POST"
             >
               {% csrf_token %}
-              <button type="submit" class="btn btn-danger">Supprimer</button>
+              <button style="background-color: #b40404e6;" type="submit" class="btn btn-danger">Supprimer</button>
             </form>
           </td>
         </tr>

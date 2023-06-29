@@ -1,14 +1,14 @@
 {% extends 'blog/layout.html' %} {% block body %}
 <div class="edit-background">
-	<input class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
+	<input style="background-color: rgb(142 102 74);" class="btn btn-primary" type=button value="Retour" onClick="javascript:history.go(-1);">
 	
 	<div class="edit-title text-center">
-		<div class="">
+		<div style="color: #fff" class="">
 			<h1>Nouveau Client</h1>
 		</div>
 	</div>
 	{% if messages %}
-    <ul class="messages">
+    <ul style="color: #fff" class="messages">
       {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
@@ -20,25 +20,25 @@
 				<form method="POST">
 					{% csrf_token %}
 					<div class="form-row">
-						<div class="form-group col-md-6">
+						<div style="color: #fff" class="form-group col-md-6">
 							<label for="name">Nom</label> <input type="text"
 								class="form-control" name="name" value="{{client.name}}">
 						</div>
-						<div class="form-group col-md-6">
+						<div style="color: #fff" class="form-group col-md-6">
 							<label for="phone">Phone</label> <input type="number"
 								class="form-control" name="phone" value="{{client.phone}}">
 						</div>
-						<div class="form-group col-md-6">
+						<div style="color: #fff" class="form-group col-md-6">
 							<label for="address">Adresse</label> <input type="text"
 								class="form-control" name="address" value="{{client.address}}">
 						</div>
-						<div class="form-group col-md-6">
+						<div style="color: #fff" class="form-group col-md-6">
 							<label for="zip_code">Code postal</label> <input type="number"
 								class="form-control" name="zip_code"
 								value="{{client.zip_code}}">
 						</div>
 					</div>
-					<button type="submit" class="btn btn-info">Ajouter</button>
+					<button style="background-color: rgb(142 102 74);" type="submit" class="btn btn-info">Ajouter</button>
 				</form>
 			</div>
 		</div>

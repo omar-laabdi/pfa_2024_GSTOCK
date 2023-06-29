@@ -1,12 +1,12 @@
 {% extends 'blog/layout.html' %} {% block body %}
 <div class="edit-background">
-  <input
+  <input style="background-color: rgb(142 102 74);"
     class="btn btn-primary"
     type="button"
     value="Retour"
     onClick="javascript:history.go(-1);"
   />
-  <div class="search-bar">
+  {% comment %} <div class="search-bar">
     <form method="GET" action="{% url 'historique' %}">
       <input
         type="text"
@@ -16,8 +16,8 @@
       />
       <button type="submit" class="btn btn-primary">Search</button>
     </form>
-  </div>
-  <div class="edit-title text-center">
+  </div> {% endcomment %}
+  <div style="color: #fff" class="edit-title text-center">
     <div class="">
       <h1>Historique des Commandes</h1>
     </div>
@@ -25,23 +25,23 @@
   <table class="table article text-center">
     <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nom</th>
-        <th scope="col">Prix unitaire</th>
-        <th scope="col">Nombre d'article</th>
-        <th scope="col">Fournisseur</th>
-        <th scope="col">Vendu à</th>
+        <th style="color: #fff" scope="col">#</th>
+        <th style="color: #fff" scope="col">Nom</th>
+        <th style="color: #fff" scope="col">Prix unitaire</th>
+        <th style="color: #fff" scope="col">Nombre d'article</th>
+        <th style="color: #fff" scope="col">Fournisseur</th>
+        <th style="color: #fff" scope="col">Vendu à</th>
       </tr>
     </thead>
     <tbody>
       {% for commande in hist_commandes %}
       <tr class="{{ commande.id }}">
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ commande.article.name }}</td>
-        <td>{{ commande.article.price }}</td>
-        <td>{{ commande.quantite }}</td>
-        <td>{{ commande.article.provider.name }}</td>
-        <td>{{ commande.client.name }}</td>
+        <td style="color: #fff">{{ commande.article.name }}</td>
+        <td style="color: #fff">{{ commande.article.price }}</td>
+        <td style="color: #fff">{{ commande.quantite }}</td>
+        <td style="color: #fff">{{ commande.article.provider.name }}</td>
+        <td style="color: #fff">{{ commande.client.name }}</td>
       </tr>
       {% endfor %}
     </tbody>
