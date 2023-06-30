@@ -64,4 +64,4 @@ class HistCommande(models.Model):
     quantite = models.IntegerField(default=0, null=False, blank=False)
 
     def __str__(self):
-        return self.article.name
+        return f"HistCommande object (id: {self.id})"

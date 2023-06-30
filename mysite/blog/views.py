@@ -6,7 +6,7 @@ from blog.models import Commande, HistCommande, Provider, Article, Client, Stock
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import F
-from django.db.models import Sum
+from django.db.models import Sum,Count
 
 
 def home(request):
@@ -265,14 +265,11 @@ def delete_article(request, article_barcode):
 def delete_stock(request, name):
     Stock.objects.get(name=name).delete()
 
-    try:
-        article = Article.objects.get(name=name)
+    articles = Article.objects.filter(name=name)
+    for article in articles:
         article.delete()
-    except Article.DoesNotExist:
-        pass
 
-    return HttpResponseRedirect("/stock")
-
+    return redirect("stock")
 
 def vente(request):
     listeArticle = {}
@@ -291,27 +288,30 @@ def vente(request):
             try:
                 quantite = int(quantite)
                 client_id = int(client_id)
-                article = Article.objects.get(name=name)
-                stock = Stock.objects.get(name=article.name)
-                if quantite > stock.stock:
-                    messages.error(request, "Depasser quantite dans stock")
+                articles = Article.objects.filter(name=name)  # Use filter instead of get
+
+                if articles.exists():
+                    article = articles.first()  # Retrieve the first matching article
+                    stock = Stock.objects.get(name=article.name)
+
+                    if quantite > stock.stock:
+                        messages.error(request, "Quantity exceeds the available stock")
+                    else:
+                        if "listkey" in request.session:
+                            listkey = request.session.get("listkey")
+                            listkey[article.name] = quantite
+
+                        request.session["listkey"] = listkey
+                        listClient["id"] = client_id
+                        request.session["listClient"] = listClient
+                        request.session["listkey"] = listkey
+                        create_commande = True
+
                 else:
-                    if "listkey" in request.session:
-                        listkey = request.session.get("listkey")
-                        listkey[article.name] = quantite
-
-                    request.session["listkey"] = listkey
-
-                listClient["id"] = client_id
-
-                request.session["listClient"] = listClient
-
-                request.session["listkey"] = listkey
-
-                create_commande = True
+                    messages.error(request, "Article does not exist!")
 
             except Article.DoesNotExist:
-                messages.error(request, "Article  n'existes pas!!! (1)")
+                messages.error(request, "Article does not exist!")
 
     if "listkey" not in request.session:
         request.session["listkey"] = listkey
@@ -326,21 +326,27 @@ def vente(request):
     if create_commande:
         try:
             for key, value in listkey.items():
-                article = Article.objects.select_related("provider").get(name=key)
-                listeArticle[article.name] = [article, value]
-                Commande.objects.create(
-                    article=article,
-                    client=Client.objects.get(id=listClient["id"]),
-                    quantite=value,
-                )
+                articles = Article.objects.filter(name=key)  # Use filter instead of get
+
+                if articles.exists():
+                    article = articles.first()  # Retrieve the first matching article
+                    listeArticle[article.name] = [article, value]
+                    Commande.objects.create(
+                        article=article,
+                        client=Client.objects.get(id=listClient["id"]),
+                        quantite=value,
+                    )
+                    listkey = {}
+                    request.session["listkey"] = listkey
+
+                else:
+                    messages.error(request, "Article does not exist!")
 
         except Article.DoesNotExist:
-            messages.error(request, "Article n'existes pas!!! (2)")
+            messages.error(request, "Article does not exist!")
 
     clients = Client.objects.all()
-
     commandes = Commande.objects.all()
-
     articles = Article.objects.all()
 
     context = {
@@ -353,23 +359,51 @@ def vente(request):
     }
     return render(request, "blog/caisse.html", context)
 
-
 def paiement(request):
-    total_quantite = Commande.objects.aggregate(total=Sum("quantite"))["total"]
+    # Retrieve commands with multiple occurrences of the same article name
+    duplicate_article_names = Commande.objects.values("article__name").annotate(
+        name_count=Count("article__name")
+    ).filter(name_count__gt=1)
 
-    commandes = Commande.objects.all()
+    total_quantite = 0
 
-    for commande in commandes:
-        stock = Stock.objects.get(name=commande.article)
-        stock.stock -= total_quantite
-        stock.save()
-        HistCommande.objects.create(
-            article=commande.article,
-            client=commande.client,
-            quantite=commande.quantite,
-        )
+    for duplicate_article in duplicate_article_names:
+        article_name = duplicate_article["article__name"]
+        total_quantite += Commande.objects.filter(article__name=article_name).aggregate(total=Sum("quantite"))["total"]
 
-    Commande.objects.all().delete()
+    try:
+        commandes = Commande.objects.all()
+
+        for commande in commandes:
+            try:
+                article = commande.article
+                client = commande.client
+
+                # Update stock quantity
+                stock = Stock.objects.get(name=article.name)
+                if stock.stock >= commande.quantite:
+                    stock.stock -= commande.quantite
+                    stock.save()
+                else:
+                    messages.error(request, f"Insufficient stock for {article.name}")
+
+                # Create historical record
+                HistCommande.objects.create(
+                    article=article,
+                    client=client,
+                    quantite=commande.quantite,
+                )
+
+            except Article.DoesNotExist:
+                messages.error(request, f"Article {article.name} does not exist")
+            except Client.DoesNotExist:
+                messages.error(request, f"Client with ID {client.id} does not exist")
+
+        Commande.objects.all().delete()
+        messages.success(request, "Payment and order processing successful.")
+    except Exception as e:
+        messages.error(request, f"Error during payment and order processing: {str(e)}")
+
     return redirect("caisse")
 
 
@@ -378,27 +412,6 @@ def delete_all_articles(request, commande_id):
 
     return HttpResponseRedirect("/caisse")
 
-
-def new_stock(request):
-    if request.method == "POST":
-        article_id = request.POST.get("article")
-        stock_value = request.POST.get("stock")
-
-        if not article_id or not stock_value:
-            messages.error(request, "Please fill in all fields.")
-            return redirect("new_stock")
-
-        try:
-            article = Article.objects.get(id=article_id)
-            stock = Stock(article=article, stock=stock_value)
-            stock.save()
-            return redirect("stock")
-        except Article.DoesNotExist:
-            messages.error(request, "Article does not exist.")
-            return redirect("new_stock")
-    else:
-        list_article = Article.objects.all().order_by("-name")
-        return render(request, "blog/new_stock.html", {"list_article": list_article})
 
 def historique_commande(request):
     search = request.GET.get("search", "")
