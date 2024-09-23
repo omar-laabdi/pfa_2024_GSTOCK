@@ -7,7 +7,20 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.db.models import F
 from django.db.models import Sum,Count
+from .models import Article, Client, Provider
 
+def search(request):
+    query = request.GET.get('q')
+    articles = Article.objects.filter(name__icontains=query)
+    clients = Client.objects.filter(name__icontains=query)
+    providers = Provider.objects.filter(name__icontains=query)
+    context = {
+        'query': query,
+        'articles': articles,
+        'clients': clients,
+        'providers': providers,
+    }
+    return render(request, 'blog/search_results.html', context)
 
 def home(request):
     return redirect("login")
@@ -425,3 +438,14 @@ def historique_commande(request):
         "hist_commandes": hist_commandes,
     }
     return render(request, "blog/historique_commande.html", context)
+
+def dashboard(request):
+    # Define the context dictionary
+    context = {
+            "client_count": Client.objects.count(),
+            "article_count": Article.objects.count(), 
+            "vent_count": Commande.objects.count()
+    }  # You need to populate this dictionary with data to be used in the template
+    
+    # Render the dashboard template with the context
+    return render(request, "blog/dashboard.html", context)

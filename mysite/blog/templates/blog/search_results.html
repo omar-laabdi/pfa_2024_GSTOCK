@@ -1,0 +1,45 @@
+{% extends 'blog/layout.html' %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-white">Chercher résultats pour "{{ query }}"</h1>
+    <hr>
+    <h2 class="text-white">Produits</h2>
+    {% if articles %}
+    <ul class="list-group">
+        {% for article in articles %}
+        <li class="list-group-item">
+            <a href="{% url 'edit_article' article.id %}">{{ article.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-white">Pas de Produit trouvé.</p>
+    {% endif %}
+    <hr>
+    <h2 class="text-white">Clients</h2>
+    {% if clients %}
+    <ul class="list-group">
+        {% for client in clients %}
+        <li class="list-group-item">
+            <a href="{% url 'edit_client' client.id %}">{{ client.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-white">Pas de client trouvé.</p>
+    {% endif %}
+    <hr>
+    <h2 class="text-white">Fournisseurs</h2>
+    {% if providers %}
+    <ul class="list-group">
+        {% for provider in providers %}
+        <li class="list-group-item">
+            <a href="{% url 'edit_provider' provider.id %}">{{ provider.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-white">Pas de Fournisseur trouvé.</p>
+    {% endif %}
+</div>
+{% endblock %}

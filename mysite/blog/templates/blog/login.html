@@ -2,82 +2,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block head%}{% endblock %}
+  {% block head %}{% endblock %}
   <meta charset="utf-8">
-  <title>Outil de gestion de stock</title>
+  <title>StockGuardian</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <style>
-    .btn-anim:hover{
-      color: #0f903e !important;
-      background-color: #F8F9FA !important;
+    .logo {
+      font-size: 40px;
+      color: brown;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+    }
+    .logo span {
+      color: white;
+    }
+    h1 {
+      font-family: 'Roboto', sans-serif;
+      font-size: 50px;
+      margin: 0;
+      padding-bottom: 20px;
+    }
+    .h1 span {
+      color: #ff7200;
+      font-size: 65px;
+    }
+    .btn-anim:hover {
       box-shadow: 0.3rem 0.3rem black, -0.3rem -0.3rem #0f903e;
-      transition: all .3s;
+      transition: all 0.3s;
+    }
+    body {
+      background-color: #05011E;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Roboto', sans-serif;
+    }
+    .text-brown {
+      color: brown;
+      font-family: 'Roboto', sans-serif;
+    }
+    .bg-brown {
+      background-color: brown;
+    }
+    .btn-custom {
+      background-color: #4660E1;
+      border-color: #4660E1;
+      color: white !important;
+      transition: all 0.3s;
+      font-family: 'Roboto', sans-serif;
+    }
+    .btn-custom:hover,
+    .btn-custom:focus,
+    .btn-custom:active {
+      background-color: white !important;
+      border-color: #4660E1 !important;
+      color: #4660E1 !important;
+      box-shadow: 0.3rem 0.3rem black, -0.3rem -0.3rem #4660E1;
+    }
+    .circular-logo {
+      width: 200px; /* Adjust the size as needed */
+      height: 300px; /* Adjust the size as needed */
+      border-radius: 30%;
     }
   </style>
 </head>
-<body class="bg-light">
-  
-
+<body>
   {% block content %}
-  <div class="container">
-
-    <nav class="navbar bg-white rounded">
-      <div class="container-fluid">
-        <a class="navbar-brand text-dark fw-bold text-center" href="">
-          <img src="{% static 'img/emsi.png' %}" alt="Bootstrap" class="img-fluid w-25">
-        </a>
-      </div>
-    </nav>
-
-    <div class="card mt-5 w-50 text-center mx-auto" >
-      <img src="{% static 'img/login.svg' %}" class="card-img-top w-50 mx-auto" alt="...">
+  <div class="container text-center">
+    <div class="card mt-5 w-50 text-center mx-auto bg-transparent">
+      <img src="{% static 'img/logo.png' %}" class="card-img-top w-50 mx-auto circular-logo" alt="Logo">
       <div class="card-body">
-        <h2 class="text-success fw-bold mb-3 badge px-5 fs-3 bg-success text-light">Login Manager</h2>
-          <form method="post" >
-            <div class="mb-3">
-              <input type="text" class="form-control w-50 mx-auto fw-bold" id="username" placeholder="Username" name="username" required>
-            </div>
-            <div class="mb-3">
-              <input type="password" class="form-control w-50 mx-auto fw-bold" id="password" placeholder="password" name="password" required>
-            </div>
-            <div class="mb-3">
-              <button type="submit" id="loginBtn" class="btn btn-success rounded fw-bold btn-anim">Login</button>
-            </div>
-            
-          </form>
+        <form method="post">
+          <div class="mb-3">
+            <input type="text" class="form-control w-50 mx-auto fw-bold" id="username" placeholder="Nom d'utilisateur" name="Nom d'utilisateur" required>
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control w-50 mx-auto fw-bold" id="password" placeholder="mot de passe" name="mot de passe" required>
+          </div>
+          <div class="mb-3">
+            <button type="submit" id="loginBtn" class="btn btn-custom rounded fw-bold btn-anim">Se connecter</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  
-    
-    
   {% endblock %}
-
   <script>
     document.getElementById("loginBtn").addEventListener("click", function(event) {
       event.preventDefault(); // Prevent form submission
-
       // Get the entered username and password
       var username = document.getElementById("username").value;
       var password = document.getElementById("password").value;
-
       // Perform the verification
-      var correctUsername = "aze"; // Replace with the correct username
-      var correctPassword = "aze"; // Replace with the correct password
-
+      var correctUsername = "akram"; // Replace with the correct username
+      var correctPassword = "12345"; // Replace with the correct password
       if (username === correctUsername && password === correctPassword) {
         // Username and password match
-        alert("Login successful!");
+        alert("Connexion réussie!");
         // Redirect to another page
         window.location.href = "provider"; // Replace with your desired URL
       } else {
         // Username and password do not match
-        alert("Invalid username or password. Please try again.");
+        alert("Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer");
       }
     });
   </script>
-
-  <script 
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
+</html>

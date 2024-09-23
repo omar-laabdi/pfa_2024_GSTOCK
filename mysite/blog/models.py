@@ -65,3 +65,17 @@ class HistCommande(models.Model):
 
     def __str__(self):
         return f"HistCommande object (id: {self.id})"
+
+
+class UserAdmin(models.Model):
+    name = models.CharField(max_length=50, default="")
+    laname = models.CharField(max_length=50, default="")
+    email = models.CharField(max_length=50, unique=True)
+    passwrd = models.CharField(max_length=50, default="")
+    isAccepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
+

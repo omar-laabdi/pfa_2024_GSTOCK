@@ -1,58 +1,165 @@
-{% extends 'blog/layout.html' %} {% block body %}
+{% extends 'blog/layout.html' %}
+{% block head %}
+{{ block.super }}
+<style>
+
+  /* General Button Styles */
+  .btn-custom {
+    font-size: 14px;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgb(170, 110, 68); /* Matching the brown color */
+    background-color: white;
+    color: rgb(170, 110, 68);
+  }
+
+  .btn-custom:hover {
+    background-color: rgb(170, 110, 68);
+    color: white;
+  }
+
+  .glow {
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+
+  @-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 5px #8B4513, 0 0 10px #A0522D, 0 0 15px #CD853F;
+    }
+    to {
+      text-shadow: 0 0 10px #8B4513, 0 0 15px #D2691E, 0 0 20px #D2691E;
+    }
+  }
+
+  /* Table Styles */
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #fff;
+    border-collapse: collapse;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: left;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .table thead th {
+    background-color: #343a40;
+    color: #fff;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .table tbody tr {
+    color: #fff;
+  }
+
+  .table tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .table-actions a {
+    margin-right: 10px;
+    text-decoration: none;
+  }
+  .btn.btn:hover {
+    background: rgb(170 110 68);
+  }
+  .btn.btn-warning:hover {
+    background-color: orange; 
+  }
+  
+  .btn.btn-danger:hover {
+    background-color: red;
+  }
+  .back-button {
+    margin-left: -20px; /* Adjust this value as needed to move the button further left */
+    padding: 0; /* Remove padding */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    width: 60px; /* Set width to match image */
+    height: 50px; /* Set height to match image */
+}
+
+.back-button img {
+    width: 100%; /* Make image fill the button */
+    height: 100%; /* Make image fill the button */
+}
+</style>
+{% endblock %}
+{% block body %}
 <div class="edit-background">
-	<input class="btn btn-primary" style="background-color: rgb(170, 110, 68);" type=button value="Retour" onClick="javascript:history.go(-1);">
-	
-	<div class="edit-title text-center">
-		<div class="">
-			<h1 style="color: #fff">Nouveau produit</h1>
-		</div>
-	</div>
-	{% if messages %}
-    <ul style="color: #fff" class="messages">
-      {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-    </ul>
+  <button class="btn btn-custom back-button" onClick="javascript:history.go(-1);">
+		<img src="/static/img/back-button.png" alt="Retour" style="width: 100%; height: 100%;">
+	</button>
+  
+  <div class="edit-title text-center">
+    <div class="">
+      <h1 style="color: #fff">Nouveau produit</h1>
+    </div>
+  </div>
+  
+  {% if messages %}
+  <ul style="color: #fff" class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
   {% endif %}
-	<div class="edit-body">
-		<div class="edit-component edit-left-box">
-			<div class="edit-box edit-article-informations">
-				<form method="POST">
-					{% csrf_token %}
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label style="color: #fff" for="name">Nom</label> <input type="text"
-								class="form-control" name="name" value="{{article.name}}">
-						</div>
-						<div class="form-group col-md-6">
-							<label style="color: #fff" for="phone">Prix</label> <input type="number" step="0.01"
-								class="form-control" name="price" value="{{article.price}}">
-						</div>
-						<div class="form-group col-md-6">
-							<label style="color: #fff" for="phone">Code bare</label> <input type="number"
-								class="form-control" name="barcode" value="{{article.barcode}}">
-						</div>
-						<div class="form-group col-md-6">
-							<label style="color: #fff" for="address">Quantité</label> <input type="number"
-								class="form-control" name="quantite" value="{{article.quantite}}">
-						</div>
-						<div class="form-group col-md-6">
-							<label style="color: #fff" for="provider">Fournisseur</label> <select
-								class="form-control" name="provider">
-								{% for provider in list_provider %} 
-								{% if provider.id == article.provider.id %}
-								<option value="{{article.provider.id}}" selected="selected">{{article.provider.name}}</option>
-								{% else %}
-								<option value="{{provider.id}}">{{provider.name}}</option>
-								{% endif %} 
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-					<button type="submit" class="btn btn-info" style="background-color: rgb(142 102 74);">Ajouter</button>
-				</form>
-			</div>
-		</div>
-	</div>
+  
+  <div class="edit-body">
+    <div class="edit-component edit-left-box">
+      <div class="edit-box edit-article-informations">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label style="color: #fff" for="name">Nom</label>
+              <input type="text" class="form-control" name="name" value="{{article.name}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label style="color: #fff" for="price">Prix</label>
+              <input type="number" step="0.01" class="form-control" name="price" value="{{article.price}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label style="color: #fff" for="barcode">Code barre</label>
+              <input type="number" class="form-control" name="barcode" value="{{article.barcode}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label style="color: #fff" for="quantite">Quantité</label>
+              <input type="number" class="form-control" name="quantite" value="{{article.quantite}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label style="color: #fff" for="provider">Fournisseur</label>
+              <select class="form-control" name="provider">
+                {% for provider in list_provider %}
+                {% if provider.id == article.provider.id %}
+                <option value="{{article.provider.id}}" selected="selected">{{article.provider.name}}</option>
+                {% else %}
+                <option value="{{provider.id}}">{{provider.name}}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-custom glow mt-2 mb-3">Ajouter le produit</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

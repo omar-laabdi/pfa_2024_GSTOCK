@@ -26,4 +26,7 @@ urlpatterns = [
     path("stock/", views.stock, name="stock"),
     path("delete_stock/<str:name>", views.delete_stock, name="delete_stock"),
     path("historique_commandes/", views.historique_commande, name="historique"),
+    path('search/', views.search, name='search'),
+    path('dashboard/',views.dashboard,name='dashboard/'),
+    
 ]

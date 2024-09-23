@@ -1,64 +1,138 @@
 {% extends 'blog/layout.html' %}
+{% block head %}
+{{ block.super }}
+<style>
+  /* General Button Styles */
+  .btn-custom {
+    font-size: 14px;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgb(170, 110, 68); /* Matching the brown color */
+    background-color: white;
+    color: rgb(170, 110, 68);
+  }
+
+  .btn-custom:hover {
+    background-color: rgb(170, 110, 68);
+    color: white;
+  }
+
+  .glow {
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+
+  @-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 5px #8B4513, 0 0 10px #A0522D, 0 0 15px #CD853F;
+    }
+    to {
+      text-shadow: 0 0 10px #8B4513, 0 0 15px #D2691E, 0 0 20px #D2691E;
+    }
+  }
+
+  .form-control {
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid #ccc;
+  }
+
+  .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+  }
+
+  label {
+    color: #fff;
+  }
+
+  .messages {
+    color: #fff;
+  }
+  .back-button {
+    margin-left: -20px; /* Adjust this value as needed to move the button further left */
+    padding: 0; /* Remove padding */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    width: 60px; /* Set width to match image */
+    height: 50px; /* Set height to match image */
+}
+
+.back-button img {
+    width: 100%; /* Make image fill the button */
+    height: 100%; /* Make image fill the button */
+}
+</style>
+{% endblock %}
 {% block body %}
 <div class="edit-background">
-    <input class="btn btn-primary" style="background-color: rgb(170, 110, 68);" type="button" value="Retour" onClick="javascript:history.go(-1);">
-    
-    <div class="edit-title text-center">
-        <div class="">
-            <h1 style="color: #fff">Modifier {{article.name}}</h1>
-        </div>
+  <button class="btn btn-custom back-button" onClick="javascript:history.go(-1);">
+		<img src="/static/img/back-button.png" alt="Retour" style="width: 100%; height: 100%;">
+	</button>
+  <div class="edit-title text-center">
+    <div class="">
+      <h1 style="color: #fff">Modifier {{article.name}}</h1>
     </div>
-    {% if messages %}
-    <ul style="color: #fff" class="messages">
-      {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-    </ul>
+  </div>
+  
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
   {% endif %}
-    <div class="edit-body">
-        <div class="edit-component edit-left-box">
-            <div class="edit-box edit-article-informations">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="name">Nom</label>
-                            <input type="text" class="form-control" name="name" value="{{article.name}}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="price">Prix</label>
-                            <input type="number" step="0.01" class="form-control" name="price" value="{{article.price}}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="barcode">Code barre</label>
-                            <input type="number" class="form-control" name="barcode" value="{{article.barcode}}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="quantite">quantite</label>
-                            <input type="number" class="form-control" name="quantite" value="{{article.quantite}}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="provider">Fournisseur</label>
-                            <select class="form-control" name="provider">
-                                {% for provider in list_provider %}
-                                    {% if provider.id == article.provider.id %}
-                                        <option value="{{article.provider.id}}" selected="selected">{{article.provider.name}}</option>
-                                    {% else %}
-                                        <option value="{{provider.id}}">{{provider.name}}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="color: #fff" for="date_added">Date d'ajout</label>
-                            <input type="text" class="form-control" name="date_added" value="{{article.date_added}}" readonly>
-                        </div>
-                       
-                    </div>
-                    <button style="background-color: rgb(196, 145, 109);" type="submit" class="btn btn-info">Modifier</button>
-                </form>
+
+  <div class="edit-body">
+    <div class="edit-component edit-left-box">
+      <div class="edit-box edit-article-informations">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="name">Nom</label>
+              <input type="text" class="form-control" name="name" value="{{article.name}}">
             </div>
-        </div>
+            <div class="form-group col-md-6">
+              <label for="price">Prix</label>
+              <input type="number" step="0.01" class="form-control" name="price" value="{{article.price}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="barcode">Code barre</label>
+              <input type="number" class="form-control" name="barcode" value="{{article.barcode}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="quantite">Quantité</label>
+              <input type="number" class="form-control" name="quantite" value="{{article.quantite}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="provider">Fournisseur</label>
+              <select class="form-control" name="provider">
+                {% for provider in list_provider %}
+                {% if provider.id == article.provider.id %}
+                <option value="{{article.provider.id}}" selected="selected">{{article.provider.name}}</option>
+                {% else %}
+                <option value="{{provider.id}}">{{provider.name}}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="date_added">Date d'ajout</label>
+              <input type="text" class="form-control" name="date_added" value="{{article.date_added}}" readonly>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-custom glow">Modifier l'article</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
